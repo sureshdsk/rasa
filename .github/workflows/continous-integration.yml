@@ -56,8 +56,6 @@ jobs:
     steps:
     - name: Checkout git repository 🕝
       uses: actions/checkout@v2
-      with:
-        fetch-depth: 0
 
     - name: Set up Python 3.7 🐍
       uses: actions/setup-python@v1
@@ -100,6 +98,11 @@ jobs:
 
     - name: Lint Code 🎎
       run: make lint
+
+    - name: Checkout target branch to be able to diff
+      if: github.event_name == 'pull_request'
+      run: |
+        git fetch --depth=1 origin ${{ github.base_ref }}
 
     - name: Check Docstring conventions 📃
       if: github.event_name == 'pull_request'
